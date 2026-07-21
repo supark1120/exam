@@ -48,30 +48,42 @@ class QuizApp {
 
   async init() {
     try {
-      // 1. 마크다운 리소스 런타임 Fetch
-      // 브라우저 직접 로드 및 빌드 환경 모두 호환되는 fetch 방식을 사용합니다.
-      const response = await fetch('./설비보전기사 필기 모의고사 260721.md');
-      if (!response.ok) {
-        throw new Error(`마크다운 파일 로드 실패: ${response.status} ${response.statusText}`);
-      }
+      let mdText = "";
       
-      const mdText = await response.text();
+      // 1. 루트 경로에서 마크다운 리소스 fetch 시도 (Vite 빌드 환경 및 빌드 결과 배포 시)
+      try {
+        const response = await fetch('./설비보전기사 필기 모의고사 260721.md');
+        if (response.ok) {
+          mdText = await response.text();
+        }
+      } catch (e) {
+        console.log("루트 경로 fetch 실패, public 폴더 시도 중...", e);
+      }
 
-      // 2. 마크다운 데이터 파싱
+      // 2. 루트 fetch 실패 시 public 폴더 하위 경로 시도 (정적 소스 파일 직접 배포 시)
+      if (!mdText) {
+        const response = await fetch('./public/설비보전기사 필기 모의고사 260721.md');
+        if (!response.ok) {
+          throw new Error(`마크다운 파일 로드 실패: ${response.status} ${response.statusText}`);
+        }
+        mdText = await response.text();
+      }
+
+      // 3. 마크다운 데이터 파싱
       this.allQuestions = this.parseMarkdown(mdText);
       console.log(`Parsed ${this.allQuestions.length} questions successfully.`);
 
-      // 3. 이벤트 리스너 바인딩
+      // 4. 이벤트 리스너 바인딩
       this.bindEvents();
 
-      // 4. MathJax 초기화 및 페이지 첫 렌더링
+      // 5. MathJax 초기화 및 페이지 첫 렌더링
       this.triggerMathJax();
       
       // 불러오기가 완료되면 버튼 등 활성화
       if (this.btnStart) this.btnStart.disabled = false;
     } catch (error) {
       console.error("퀴즈 데이터를 초기화하지 못했습니다:", error);
-      alert("퀴즈 데이터를 불러오는데 실패했습니다. 마크다운 파일 경로를 확인해주세요.");
+      alert("퀴즈 데이터를 불러오는데 실패했습니다. 파일 경로를 확인해주세요.");
     }
   }
 
