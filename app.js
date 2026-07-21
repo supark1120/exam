@@ -1,5 +1,3 @@
-import markdownText from './설비보전기사 필기 모의고사 260721.md?raw';
-
 // 퀴즈 상태 클래스
 class QuizApp {
   constructor() {
@@ -48,16 +46,33 @@ class QuizApp {
     this.init();
   }
 
-  init() {
-    // 1. 마크다운 데이터 파싱
-    this.allQuestions = this.parseMarkdown(markdownText);
-    console.log(`Parsed ${this.allQuestions.length} questions successfully.`);
+  async init() {
+    try {
+      // 1. 마크다운 리소스 런타임 Fetch
+      // 브라우저 직접 로드 및 빌드 환경 모두 호환되는 fetch 방식을 사용합니다.
+      const response = await fetch('./설비보전기사 필기 모의고사 260721.md');
+      if (!response.ok) {
+        throw new Error(`마크다운 파일 로드 실패: ${response.status} ${response.statusText}`);
+      }
+      
+      const mdText = await response.text();
 
-    // 2. 이벤트 리스너 바인딩
-    this.bindEvents();
+      // 2. 마크다운 데이터 파싱
+      this.allQuestions = this.parseMarkdown(mdText);
+      console.log(`Parsed ${this.allQuestions.length} questions successfully.`);
 
-    // 3. MathJax 초기화 및 페이지 첫 렌더링
-    this.triggerMathJax();
+      // 3. 이벤트 리스너 바인딩
+      this.bindEvents();
+
+      // 4. MathJax 초기화 및 페이지 첫 렌더링
+      this.triggerMathJax();
+      
+      // 불러오기가 완료되면 버튼 등 활성화
+      if (this.btnStart) this.btnStart.disabled = false;
+    } catch (error) {
+      console.error("퀴즈 데이터를 초기화하지 못했습니다:", error);
+      alert("퀴즈 데이터를 불러오는데 실패했습니다. 마크다운 파일 경로를 확인해주세요.");
+    }
   }
 
   // 마크다운 파서 구현
