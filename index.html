@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인공지능 포털 & 퀴즈 시스템</title>
+  <!-- Google Fonts: Outfit, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- MathJax for Math Formula rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      },
+      startup: {
+        pageReady: () => {
+          return MathJax.startup.defaultPageReady();
+        }
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+  </script>
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Header with Navigation -->
+    <header class="main-header">
+      <div class="header-logo" id="logo-home-trigger" style="cursor: pointer;">
+        <span class="logo-badge">AI Portal</span>
+        <h1 class="logo-title">인공지능</h1>
+      </div>
+      
+      <!-- Global Navigation Icons -->
+      <nav class="global-nav">
+        <button class="nav-item active" id="nav-home" title="홈">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>홈</span>
+        </button>
+        <button class="nav-item" id="nav-study" title="공부">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          <span>공부</span>
+        </button>
+        <button class="nav-item" id="nav-quiz" title="퀴즈">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+          <span>퀴즈</span>
+        </button>
+      </nav>
+
+      <div class="session-info">
+        <span id="attempt-badge" class="badge attempt-1">1회차: 연습 모드</span>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      
+      <!-- 0. Portal Main Screen (인공지능 홈) -->
+      <section id="screen-home" class="screen active">
+        <div class="card portal-hero">
+          <div class="hero-content">
+            <span class="sub-tag">Artificial Intelligence Portal</span>
+            <h2>인공지능 학습 및 모의평가</h2>
+            <p class="hero-desc">
+              현대 과학기술의 정점인 인공지능(AI)의 기본 개념과 핵심 원리를 학습하고, 무작위 퀴즈를 통해 본인의 지식을 완벽하게 검증해보세요.
+            </p>
+          </div>
+        </div>
+
+        <div class="portal-menu-grid">
+          <!-- 1번 버튼: 인공지능 공부 -->
+          <div class="portal-card" id="btn-goto-study">
+            <div class="portal-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            </div>
+            <div class="portal-card-info">
+              <h3>인공지능 공부하기</h3>
+              <p>기초 개념부터 머신러닝, 딥러닝, 생성형 AI(LLM) 모델까지 시각적인 로드맵과 텍스트를 통해 핵심 이론을 정밀 학습합니다.</p>
+              <span class="portal-card-action">학습 시작 &rarr;</span>
+            </div>
+          </div>
+
+          <!-- 2번 버튼: 퀴즈 풀기 -->
+          <div class="portal-card accent" id="btn-goto-quiz">
+            <div class="portal-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            </div>
+            <div class="portal-card-info">
+              <h3>퀴즈 풀기 (평가)</h3>
+              <p>실전 모의고사 문항을 무작위 추출하여 제한 시간 조건에 맞추어 풀어봅니다. 회차가 지날수록 난이도와 시간 압박이 가중됩니다.</p>
+              <span class="portal-card-action">평가 시작 &rarr;</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 0.5 Study Screen (인공지능 공부하기) -->
+      <section id="screen-study" class="screen">
+        <div class="study-header-bar">
+          <button class="btn btn-secondary btn-sm btn-back-home">&larr; 메인으로</button>
+          <h2>인공지능 핵심 요약 학습</h2>
+        </div>
+
+        <div class="study-container">
+          <!-- AI Topic 1 -->
+          <div class="study-card">
+            <div class="study-card-num">01</div>
+            <div class="study-card-content">
+              <h3>인공지능의 개요 및 정의</h3>
+              <p>인공지능(AI)은 인간의 인지, 학습, 추론, 문제 해결 능력을 컴퓨터 시스템을 통해 모방하고 구현하는 컴퓨터 과학의 한 분야입니다.</p>
+              <ul class="study-bullets">
+                <li><strong>약인공지능(Weak AI)</strong>: 특정 업무(바둑, 음성인식 등)를 수행하도록 설계된 AI (현재의 모든 AI)</li>
+                <li><strong>강인공지능(Strong AI)</strong>: 인간과 동등하거나 그 이상의 다목적 지능을 가진 범용 인공지능(AGI)</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- AI Topic 2 -->
+          <div class="study-card">
+            <div class="study-card-num">02</div>
+            <div class="study-card-content">
+              <h3>머신러닝 (Machine Learning)</h3>
+              <p>데이터로부터 패턴을 컴퓨터 스스로 학습하여 예측이나 의사결정을 내릴 수 있도록 하는 알고리즘 체계입니다.</p>
+              <ul class="study-bullets">
+                <li><strong>지도 학습(Supervised)</strong>: 입력값과 명시적인 레이블(정답)을 제공하여 관계를 학습. (예: 분류, 회귀)</li>
+                <li><strong>비지도 학습(Unsupervised)</strong>: 정답 없이 데이터 자체의 특징과 구조를 분석하여 군집화. (예: 클러스터링, 차원 축소)</li>
+                <li><strong>강화 학습(Reinforcement)</strong>: 행동의 결과에 따른 보상(Reward)을 최대화하는 방향으로 정책을 학습. (예: 게임 AI, 로봇 제어)</li>
+              </ul>
+              <div class="study-formula">
+                <span>회귀 분석의 표준 오차(MSE):</span>
+                $$MSE = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2$$
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Topic 3 -->
+          <div class="study-card">
+            <div class="study-card-num">03</div>
+            <div class="study-card-content">
+              <h3>딥러닝 & 인공신경망 (Deep Learning)</h3>
+              <p>인간의 뇌 신경망 구조를 모방한 <strong>인공신경망(Artificial Neural Network)</strong>을 다층(Deep)으로 쌓아 복잡한 비선형 관계를 인코딩하고 처리하는 기술입니다.</p>
+              <ul class="study-bullets">
+                <li><strong>다층 퍼셉트론(MLP)</strong>: 입력층, 은닉층, 출력층으로 연결된 기본 신경망 구조</li>
+                <li><strong>합성곱 신경망(CNN)</strong>: 공간 정보를 유지하며 이미지 특징 추출에 특화된 신경망</li>
+                <li><strong>순환 신경망(RNN)</strong>: 순서가 있는 시계열 데이터나 자연어 처리에 쓰이는 신경망</li>
+              </ul>
+              <div class="study-formula">
+                <span>시그모이드 활성화 함수(Sigmoid Function):</span>
+                $$\sigma(x) = \frac{1}{1 + e^{-x}}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Topic 4 -->
+          <div class="study-card">
+            <div class="study-card-num">04</div>
+            <div class="study-card-content">
+              <h3>생성형 AI 및 대규모 언어 모델 (LLM)</h3>
+              <p>트랜스포머(Transformer) 아키텍처를 기반으로 방대한 텍스트 데이터를 사전 학습하여 자연스러운 텍스트, 이미지, 오디오 등의 콘텐츠를 생성하는 인공지능입니다.</p>
+              <ul class="study-bullets">
+                <li><strong>트랜스포머(Transformer)</strong>: 어텐션(Attention) 메커니즘을 적용하여 시퀀스 내 단어 간의 연관관계를 효율적으로 분석하는 아키텍처</li>
+                <li><strong>LLM (Large Language Model)</strong>: 수십억~수천억 개의 매개변수(Parameter)를 가진 초대형 언어 모델 (예: GPT-4, Gemini)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="study-footer-actions">
+          <button class="btn btn-primary btn-lg btn-back-home">학습 완료 (메인으로)</button>
+        </div>
+      </section>
+
+      <!-- 1. Start Screen (퀴즈 셋업) -->
+      <section id="screen-start" class="screen">
+        <div class="study-header-bar">
+          <button class="btn btn-secondary btn-sm btn-back-home">&larr; 메인으로</button>
+          <h2>퀴즈 설정</h2>
+        </div>
+
+        <div class="card hero-card">
+          <div class="hero-content">
+            <span class="sub-tag">Random Mock Exam</span>
+            <h2>설비보전기사 필기 무작위 모의고사</h2>
+            <p class="hero-desc">
+              문제를 무작위 추출하여 퀴즈를 진행합니다. 풀이 횟수가 누적됨에 따라 문제당 제한 시간이 적용되는 단계별 학습 시스템입니다.
+            </p>
+          </div>
+          <div class="modes-grid">
+            <div class="mode-item active" id="mode-info-1">
+              <div class="mode-icon green">1</div>
+              <div class="mode-text">
+                <h3>1회차: 연습 모드</h3>
+                <p>시간 제한 없이 꼼꼼하게 문제를 파악하며 학습합니다.</p>
+              </div>
+            </div>
+            <div class="mode-item" id="mode-info-2">
+              <div class="mode-icon orange">2</div>
+              <div class="mode-text">
+                <h3>2회차: 실전 모드 (2분)</h3>
+                <p>문제당 <strong>2분</strong>의 제한 시간이 주어집니다.</p>
+              </div>
+            </div>
+            <div class="mode-item" id="mode-info-3">
+              <div class="mode-icon red">3</div>
+              <div class="mode-text">
+                <h3>3회차: 타임어택 (1분)</h3>
+                <p>문제당 <strong>1분</strong>의 제한 시간으로 테스트합니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-group">
+            <label class="config-label">문제 추출 수</label>
+            <div class="option-chips" id="question-count-chips">
+              <button class="chip active" data-count="10">10문항</button>
+              <button class="chip" data-count="20">20문항</button>
+              <button class="chip" data-count="50">50문항</button>
+              <button class="chip" data-count="100">100문항 (전체)</button>
+            </div>
+          </div>
+
+          <div class="config-group">
+            <label class="config-label">도전 회차 설정</label>
+            <div class="option-chips" id="attempt-select-chips">
+              <button class="chip active" data-attempt="1">1회차 (무제한)</button>
+              <button class="chip" data-attempt="2">2회차 (2분/문항)</button>
+              <button class="chip" data-attempt="3">3회차 (1분/문항)</button>
+            </div>
+          </div>
+
+          <button id="btn-start" class="btn btn-primary btn-lg">
+            <span>퀴즈 시작하기</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. Quiz Screen -->
+      <section id="screen-quiz" class="screen">
+        <div class="quiz-progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        
+        <div class="quiz-meta">
+          <div class="quiz-info-block">
+            <span class="meta-label">과목</span>
+            <span id="quiz-subject" class="meta-value">제1과목: 설비 진단 및 계측</span>
+          </div>
+          <div class="quiz-info-block text-center">
+            <span class="meta-label">진행도</span>
+            <span id="quiz-counter" class="meta-value">1 / 20</span>
+          </div>
+          <div class="quiz-info-block text-right">
+            <span class="meta-label">남은 시간</span>
+            <span id="quiz-timer" class="meta-value timer-unlimited">무제한</span>
+          </div>
+        </div>
+
+        <div class="card question-card">
+          <div class="question-header">
+            <span class="question-number" id="question-display-num">Q. 01</span>
+            <h2 class="question-text" id="question-text">문제를 불러오는 중입니다...</h2>
+          </div>
+
+          <div class="options-container" id="quiz-options">
+            <!-- options will be injected here -->
+          </div>
+        </div>
+
+        <div class="quiz-actions">
+          <button id="btn-submit" class="btn btn-primary" disabled>답안 제출</button>
+          <button id="btn-next" class="btn btn-secondary hide">다음 문제</button>
+        </div>
+      </section>
+
+      <!-- 3. Result Screen -->
+      <section id="screen-result" class="screen">
+        <div class="card result-card">
+          <div class="result-header">
+            <h2>퀴즈 결과 리포트</h2>
+            <p>선택하신 문제를 모두 완료했습니다. 결과를 확인하고 오답을 리뷰해 보세요.</p>
+          </div>
+
+          <div class="score-dashboard">
+            <div class="score-circle-container">
+              <svg class="score-ring" width="160" height="160">
+                <circle class="score-ring-bg" cx="80" cy="80" r="70" stroke-width="12"></circle>
+                <circle id="score-ring-fill" class="score-ring-fill" cx="80" cy="80" r="70" stroke-width="12" stroke-dasharray="440" stroke-dashoffset="440"></circle>
+              </svg>
+              <div class="score-text">
+                <span id="result-score-percent">0%</span>
+                <span id="result-score-fraction">0 / 20</span>
+              </div>
+            </div>
+
+            <div class="stats-cards">
+              <div class="stat-mini green">
+                <span class="stat-label">정답</span>
+                <span class="stat-val" id="stat-correct">0</span>
+              </div>
+              <div class="stat-mini red">
+                <span class="stat-label">오답/시간초과</span>
+                <span class="stat-val" id="stat-wrong">0</span>
+              </div>
+              <div class="stat-mini blue">
+                <span class="stat-label">소요 시간</span>
+                <span class="stat-val" id="stat-duration">00:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button id="btn-retry" class="btn btn-primary btn-lg">
+              <span id="retry-btn-text">다시 풀기 (2회차 - 2분 제한)</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+            </button>
+            <button id="btn-home" class="btn btn-secondary btn-lg">처음으로</button>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <h3 class="review-title">전체 문제 및 해설 리뷰</h3>
+          <div class="review-list" id="review-list">
+            <!-- Review items injected here -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p>&copy; 2026 인공지능 & 퀴즈 학습 시스템. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
