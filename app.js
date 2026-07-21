@@ -52,7 +52,7 @@ class QuizApp {
       
       // 1. 루트 경로에서 마크다운 리소스 fetch 시도 (Vite 빌드 환경 및 빌드 결과 배포 시)
       try {
-        const response = await fetch('./설비보전기사 필기 모의고사 260721.md');
+        const response = await fetch('./quiz.md');
         if (response.ok) {
           mdText = await response.text();
         }
@@ -62,7 +62,7 @@ class QuizApp {
 
       // 2. 루트 fetch 실패 시 public 폴더 하위 경로 시도 (정적 소스 파일 직접 배포 시)
       if (!mdText) {
-        const response = await fetch('./public/설비보전기사 필기 모의고사 260721.md');
+        const response = await fetch('./public/quiz.md');
         if (!response.ok) {
           throw new Error(`마크다운 파일 로드 실패: ${response.status} ${response.statusText}`);
         }
